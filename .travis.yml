@@ -1,9 +1,9 @@
 sudo: required
 services:
-   -docker
+   - docker
     
 before_install:
-   -docker build -t bpanneer/react-test -f ./client/Dockerfile.dev ./client
+   - docker build -t bpanneer/react-test -f ./client/Dockerfile.dev ./client
     
 script:
     - docker run -e CI=true bpanneer/react-test npm test
