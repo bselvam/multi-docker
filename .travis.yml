@@ -1,0 +1,24 @@
+sudo: required
+services:
+   -docker
+    
+before_install
+   -docker build -t bpanneer/react-test -f ./client/Dockerfile.dev ./client
+    
+script:
+    - docker run -e CI=true bpanneer/react-test npm test
+    
+after_success:
+    - docker build -t bpanneer/multi-client ./client
+    - docker build -t bpanneer/multi-nginx ./nginx
+    - docker build -t bpanneer/multi-server ./server
+    - docker build -t bpanneer/multi-worker ./worker
+    # log into docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    #take images and push to docker hub
+    - docker push bpanneer/multi-client
+    - docker push bpanneer/multi-nginx
+    - docker push bpanneer/multi-server
+    - docker push bpanneer/multi-worker
+    
+    
